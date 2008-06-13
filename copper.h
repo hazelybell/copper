@@ -1,9 +1,9 @@
-/* debug.h Debugging helper header.
- * Copyright 2006-2007 Joshua Charles Campbell
+/* copper.h Debugging helper header.
+ * Copyright 2006-2008 Joshua Charles Campbell
 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
+ * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
@@ -21,30 +21,30 @@
 /* debug shit */
 
 /* error: always prints message and exits */
-#define E(x) {dprint("!!! %s:%i ", __FILE__, __LINE__); dprint x; dprint("\n"); dexit(1);}
+#define E(x) {(*cu_printf_handler)("!!! %s:%i ", __FILE__, __LINE__); (*cu_printf_handler) x; (*cu_printf_handler)("\n"); (*cu_exit_handler)(1);}
 
 /* warning: always prints message */
-#define W(x) {dprint("/!\\ %s:%i ", __FILE__, __LINE__); dprint x; dprint("\n");}
+#define W(x) {(*cu_printf_handler)("/!\\ %s:%i ", __FILE__, __LINE__); (*cu_printf_handler) x; (*cu_printf_handler)("\n");}
 
 /* debug: only prints if enabled */
 #ifdef ENABLE_DEBUG
-#define DEBUG(l, x) {if(testdebug(l)) {dprint("--%c %s:%i ", l, __FILE__, __LINE__); dprint x; dprint("\n"); }}
+#define DEBUG(l, x) {if(cu_testdebug(l)) {(*cu_printf_handler)("--%c %s:%i ", l, __FILE__, __LINE__); (*cu_printf_handler) x; (*cu_printf_handler)("\n"); }}
 #else /* ENABLE_DEBUG */
 #define DEBUG(l, x)
 #endif /* ENABLE_DEBUG */
 
 /* error assertions: always executed, always checked, prints message */
-#define EA(x, m) {if (!x) { DEBUG('@', ("Assertion failed: %s", #x)); dprint("!!? %s:%i ", __FILE__, __LINE__); dprint m; dprint("\n"); dexit(1);} else { DEBUG('@', ("Assertion passed: %s", #x)) } }
+#define EA(x, m) {if (!x) { DEBUG('@', ("Assertion failed: %s", #x)); (*cu_printf_handler)("!!? %s:%i ", __FILE__, __LINE__); (*cu_printf_handler) m; (*cu_printf_handler)("\n"); (*cu_exit_handler)(1);} else { DEBUG('@', ("Assertion passed: %s", #x)) } }
 
 /* assertions: always executed, always checked */
 #define A(x) EA(x, ("Assertion failed."))
 
 /* system assertions: always executed, always checked, prints errno */
-#define ASYS(x) EA(x, ("%s", derr()))
+#define ASYS(x) EA(x, ("%s", cu_err()))
 
 /* sanity check: only executed if enabled */
 #ifdef ENABLE_SANITY
-#define ES(x, m) {if (!x) { DEBUG('$', ("Sanity check failed: %s", #x)); dprint("!!$ %s:%i ", __FILE__, __LINE__); dprint m; dprint("\n"); dexit(1);} else { DEBUG('$', ("Sanity check passed: %s", #x)) } }
+#define ES(x, m) {if (!x) { DEBUG('$', ("Sanity check failed: %s", #x)); (*cu_printf_handler)("!!$ %s:%i ", __FILE__, __LINE__); (*cu_printf_handler) m; (*cu_printf_handler)("\n"); (*cu_exit_handler)(1);} else { DEBUG('$', ("Sanity check passed: %s", #x)) } }
 #else /* ENABLE_SANITY */
 #define ES(x, m)
 #endif /* ENABLE_SANITY */
@@ -76,12 +76,18 @@
 #define DW(x) DEBUG('W', x) /* word */
 #define Dw(x) DEBUG('w', x)
 
+#ifdef ENABLE_TEST
+#define TEST(x) # error "oh god"
+#else /* not ENABLE_TEST */
+#define TEST()
+#endif /* not ENABLE_TEST */
+
 /* function prototypes */
-extern int dprint(char const *f, ...);
-extern void dexit(int x);
-extern void enabledebug(char* f);
-extern int testdebug(char f);
-extern char * derr();
+extern int (*cu_vprintf_handler)(const char *format, va_list ap);
+extern void (*cu_exit_handler)(int x);
+extern void cu_enabledebug(char* f);
+extern int cu_testdebug(char f);
+extern char * cu_err();
 
 /* end debug shit */
 

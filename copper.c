@@ -1,9 +1,9 @@
-/* debug.c Debugging helper.
- * Copyright 2006-2007 Joshua Charles Campbell
+/* copper.c Debugging helper.
+ * Copyright 2006-2008 Joshua Charles Campbell
 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
+ * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
@@ -27,7 +27,7 @@
 
 static int dl[MAXFLAGS]; /* debug levels */
 
-int dprint(char const *f, ...) {
+static int cu_builtin_printf(char const *f, ...) {
 	va_list args; 
 	int i;
 	va_start(args, f);
@@ -36,11 +36,15 @@ int dprint(char const *f, ...) {
 	return i;
 }
 
-void dexit(int x) {
+int (*cu_printf_handler)(const char *format, va_list ap) = cu_builtin_printf;
+
+static void cu_builtin_exit(int x) {
 	exit(x);
 }
 
-void enabledebug(char* f) {
+void (*cu_exit_handler)(int x) = cu_builtin_exit;
+
+void cu_enabledebug(char* f) {
 	int ifl; int fl;
 	if (strcmp(f, "all") == 0) {
 		for (ifl = 0; ifl < MAXFLAGS; ifl++) {
@@ -59,10 +63,10 @@ void enabledebug(char* f) {
 	}
 }
 
-int testdebug(char f) {
+int cu_testdebug(char f) {
 	return dl[(int)f];
 }
 
-char * derr() {
+char * cu_derr() {
 	return strerror(errno);
 }
