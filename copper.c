@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#include "debug.h"
+#include "copper.h"
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -27,22 +27,30 @@
 
 static int dl[MAXFLAGS]; /* debug levels */
 
-static int cu_builtin_printf(char const *f, ...) {
+static int cu_builtin_vprintf(char const *f, va_list args) {
+	return vfprintf(stderr, f, args); 
+}
+
+static int (*cu_vprintf_handler)(const char *format, va_list args) = cu_builtin_vprintf;
+
+int cu_printf(char const *f, ...) {
 	va_list args; 
 	int i;
 	va_start(args, f);
-	i = vfprintf(stderr, f, args); 
+	i = (*cu_vprintf_handler)(f, args);
 	va_end (args); 
 	return i;
 }
-
-int (*cu_printf_handler)(const char *format, va_list ap) = cu_builtin_printf;
 
 static void cu_builtin_exit(int x) {
 	exit(x);
 }
 
-void (*cu_exit_handler)(int x) = cu_builtin_exit;
+static void (*cu_exit_handler)(int x) = cu_builtin_exit;
+
+void cu_exit(int x) {
+	(*cu_exit_handler)(x);
+}
 
 void cu_enabledebug(char* f) {
 	int ifl; int fl;
@@ -50,7 +58,7 @@ void cu_enabledebug(char* f) {
 		for (ifl = 0; ifl < MAXFLAGS; ifl++) {
 			dl[ifl] = 1;
 		}
-		D(("Every debug flag enabled.", f));
+		D(("Every debug flag enabled."));
 		return;
 	} else {
 		fl = strlen(f);
