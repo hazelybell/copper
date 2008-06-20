@@ -1,7 +1,8 @@
 /* copper.c Debugging helper.
- * Copyright 2006-2008 Joshua Charles Campbell
+ * This file is a part of the Copper framework.
+ * Copyright 2006-2008 Joshua Charles Campbell.
 
- * This program is free software; you can redistribute it and/or
+ * The Copper framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
@@ -25,10 +26,11 @@
 
 #define MAXFLAGS 128
 
-static int dl[MAXFLAGS]; /* debug levels */
+ /* debug levels */
+static int dl[MAXFLAGS];
 
 static int cu_builtin_vprintf(char const *f, va_list args) {
-	return vfprintf(stderr, f, args); 
+	return vfprintf(stderr, f, args);
 }
 
 static int (*cu_vprintf_handler)(const char *format, va_list args) = cu_builtin_vprintf;
