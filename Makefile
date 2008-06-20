@@ -31,7 +31,7 @@ copper.make : copper.pl
 	./copper.pl makefile testexamples.c >$@
 
 clean : copper_clean
-	- rm -f copper.make
+	- rm -f testexamples.o copper.make
 
 check : copper_test_all
 
