@@ -130,8 +130,8 @@ if ($ENV{COPPER_INPUT_FILES}) {
 		die "No input files."
 	}
 	$input_files = join(" ", @ARGV);
-	$copper_perl_input_files = join(":", map { quotemeta } @ARGV);
 }
+$copper_perl_input_files = join(":", map { quotemeta } @ARGV);
 
 my $object_files;
 if ($ENV{COPPER_OBJECT_FILES}) {
