@@ -54,6 +54,19 @@ void cu_exit(int x) {
 	(*cu_exit_handler)(x);
 }
 
+void cu_set_handlers(void (*provided_exit)(int x), int (*provided_vprintf)(const char *format, va_list args)) {
+    if (provided_exit == NULL) {
+        cu_exit_handler = cu_builtin_exit;
+    } else {
+        cu_exit_handler = provided_exit;
+    }
+    if (provided_vprintf == NULL) {
+        cu_vprintf_handler = cu_builtin_vprintf;
+    } else {
+        cu_vprintf_handler = provided_vprintf;
+    }
+}
+
 void cu_enabledebug(char* f) {
 	int ifl; int fl;
 	if (strcmp(f, "all") == 0) {

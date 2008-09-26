@@ -89,6 +89,8 @@ struct test_result {
 /* function prototypes */
 extern int cu_printf(const char * format, ...);
 extern void cu_exit(int x);
+#include <stdarg.h>
+extern void cu_set_handlers(void (*provided_exit)(int x), int (*provided_vprintf)(const char *format, va_list args));
 extern void cu_enabledebug(char* f);
 extern int cu_testdebug(char f);
 extern char * cu_err();
