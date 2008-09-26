@@ -19,6 +19,12 @@
 
 #include "copper.h"
 
+static int mao(int a) {
+	return a + 2;
+}
+
 TEST(1);
 TEST(1 && 1);
 TEST(1 || 0);
+
+TEST(mao(2) == 3);
