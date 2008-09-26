@@ -77,6 +77,6 @@ int cu_testdebug(char f) {
 	return dl[(int)f];
 }
 
-char * cu_derr() {
+char * cu_err() {
 	return strerror(errno);
 }
