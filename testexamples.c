@@ -23,8 +23,13 @@ static int mao(int a) {
 	return a + 2;
 }
 
-TEST(1);
-TEST(1 && 1);
-TEST(1 || 0);
+/* Note the double parens! */
+TEST((1));
+TEST((1 && 1));
+TEST((1 || 0));
 
-TEST(mao(2) == 3);
+TEST({
+  A((mao(0) == 2));
+});
+
+TEST((mao(2) == 3));

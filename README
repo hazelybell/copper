@@ -22,9 +22,13 @@ some_c_function() {
 ...
 }
 
-TEST(some_c_function(some_test_input) == some_expected_output);
-TEST(some_c_function(another_test_input) == another_expected_output);
-TEST(some_c_function(some_more_test_input) == some_more_expected_output);
+TEST((some_c_function(some_test_input) == some_expected_output));
+TEST((some_c_function(another_test_input) == another_expected_output));
+
+TEST({
+  some_setup_code();
+  A((some_c_function(some_more_test_input) == some_more_expected_output));
+});
 
 That's all it takes to define 3 tests.  some_c_function may even be 
 declared static. It's that easy!

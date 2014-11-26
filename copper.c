@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 #include "copper.h"
 #include <string.h>
 #include <unistd.h>
@@ -30,28 +31,28 @@
 static int dl[MAXFLAGS];
 
 static int cu_builtin_vprintf(char const *f, va_list args) {
-	return vfprintf(stderr, f, args);
+        return vfprintf(stderr, f, args);
 }
 
 static int (*cu_vprintf_handler)(const char *format, va_list args) = cu_builtin_vprintf;
 
 int cu_printf(char const *f, ...) {
-	va_list args; 
-	int i;
-	va_start(args, f);
-	i = (*cu_vprintf_handler)(f, args);
-	va_end (args); 
-	return i;
+        va_list args; 
+        int i;
+        va_start(args, f);
+        i = (*cu_vprintf_handler)(f, args);
+        va_end (args); 
+        return i;
 }
 
 static void cu_builtin_exit(int x) {
-	exit(x);
+        exit(x);
 }
 
 static void (*cu_exit_handler)(int x) = cu_builtin_exit;
 
 void cu_exit(int x) {
-	(*cu_exit_handler)(x);
+        (*cu_exit_handler)(x);
 }
 
 void cu_set_handlers(void (*provided_exit)(int x), int (*provided_vprintf)(const char *format, va_list args)) {
@@ -68,28 +69,28 @@ void cu_set_handlers(void (*provided_exit)(int x), int (*provided_vprintf)(const
 }
 
 void cu_enabledebug(char* f) {
-	int ifl; int fl;
-	if (strcmp(f, "all") == 0) {
-		for (ifl = 0; ifl < MAXFLAGS; ifl++) {
-			dl[ifl] = 1;
-		}
-		D(("Every debug flag enabled."));
-		return;
-	} else {
-		fl = strlen(f);
-		for (ifl = 0; ifl < fl; ifl++) {
-			dl[(int)f[ifl]] = 1;
-		}
-		dl[(int)'-'] = 1;
-		D(("Debug flags enabled: %s", f));
-		return;
-	}
+        int ifl; int fl;
+        if (strcmp(f, "all") == 0) {
+                for (ifl = 0; ifl < MAXFLAGS; ifl++) {
+                        dl[ifl] = 1;
+                }
+                D(("Every debug flag enabled."));
+                return;
+        } else {
+                fl = strlen(f);
+                for (ifl = 0; ifl < fl; ifl++) {
+                        dl[(int)f[ifl]] = 1;
+                }
+                dl[(int)'-'] = 1;
+                D(("Debug flags enabled: %s", f));
+                return;
+        }
 }
 
 int cu_testdebug(char f) {
-	return dl[(int)f];
+        return dl[(int)f];
 }
 
 char * cu_err() {
-	return strerror(errno);
+        return strerror(errno);
 }

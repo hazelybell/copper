@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 #ifndef _DEBUG_H_
 #define _DEBUG_H_
 
@@ -79,12 +80,13 @@
 
 #define TEST()
 
-// #ifdef ENABLE_TESTING
 struct test_result {
-	int pass;
-	char * text;
+        int pass;
+        char * name;
+        char * text;
 };
-// #endif /* ENABLE_TESTING */ 
+
+extern struct test_result copper_global_test_result;
 
 /* function prototypes */
 extern int cu_printf(const char * format, ...);
